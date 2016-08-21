@@ -378,497 +378,497 @@ Total Amount Won
  */
 public class Gambler {
 
-	public static void main(String[] args) {
-		
+    public static void main(String[] args) {
 
-		//generateFrequencyDistribution();
 
-		// vanilla
-		//playAMultiPlayerGameOfGamble();
+        //generateFrequencyDistribution();
 
-		// Banana
-		//playAMultiplayerRealGameOfGamble();		
+        // vanilla
+        //playAMultiPlayerGameOfGamble();
 
-		//fair game return
-		//generateAFairGameReturnMatrix();
+        // Banana
+        //playAMultiplayerRealGameOfGamble();		
 
-		// strawberry
-		//playFairGameOfGamble();
-		
-		playMultiPlayerRealGameMango();
-	}
-	
-	private static void playMultiPlayerRealGameMango() {
-		int noOfRoundsMin = 10;
-		int noOfRoundsMax = 1000000;
-		int noOfPlayersMin = 6;
-		int noOfPlayersMax = 20;
-		int amountBettedMin = 10;
-		int amountBettedMax = 1000;
-		int bettedNoMin = 2;
-		int bettedNoMax = 12;
-		double tableOwnersCharge = 0.00;
-		HashMap<String, Long> _winnersShare = playRollingDiceAllInputsRandomized(noOfRoundsMin, noOfRoundsMax, noOfPlayersMin, noOfPlayersMax, amountBettedMin, amountBettedMax, bettedNoMin, bettedNoMax, tableOwnersCharge);
-		DecimalFormat df = new DecimalFormat("#.00"); 
-		System.out.println("=============== Total Amount Won ===============");
-		System.out.println("--------------------------------------------");
-		for(String winnerName : _winnersShare.keySet()) {
-			long value = _winnersShare.get(winnerName);
-			System.out.println("| "+ winnerName + " | $" + String.format("%,d", value) +" | " + df.format(((double)value/_winnersShare.get("Total Amount Won"))*100) + "%"  );
-			System.out.println("--------------------------------------------");
-		}			
-	}
+        //fair game return
+        //generateAFairGameReturnMatrix();
 
-	public static void generateFrequencyDistribution() {
-		int noOfRounds = 10000000;
-		HashMap<String, Long> randomNumFreqMap = generateFrequencyDistribution(noOfRounds);
-		DecimalFormat df = new DecimalFormat("#.##");
-		long totalSum = 0;
-		System.out.println("------------------------------------------");
-		for(String winnerName : randomNumFreqMap.keySet()) {
-			long value = randomNumFreqMap.get(winnerName);
-			totalSum = totalSum + value;
-			//System.out.println("| "+ winnerName + " | " + value +" |" );
-			System.out.println("| "+ winnerName + " | " + String.format("%,d", value) +" | " + df.format( ((double)value/noOfRounds) * 100) +"% | " );
-			
-			System.out.println("------------------------------------------");
-		}
-		
-		System.out.println("| Total Sum | " + String.format("%,d", totalSum) +" | " + df.format( ((double)totalSum/noOfRounds) * 100) +"% | " );
-	}
-	
-	public static void playAMultiPlayerGameOfGamble() {
-		// vanilla
-		int amount = 10;
-		double tableOwnersCharge = 0.20; 
-		int noOfRounds = 2000000;
-		int noOfPlayers = 11;
-		
-		HashMap<String, Integer> winnersShare = playRollingDiceVanilla(amount, tableOwnersCharge, noOfRounds, noOfPlayers);
-		DecimalFormat df = new DecimalFormat("#");
-		System.out.println("---------------------------------------------");
-		for(String winnerName : winnersShare.keySet()) {
-			int value = winnersShare.get(winnerName);
-			System.out.println("| "+ winnerName + " | " + String.format("%,d", value) +" | " + df.format( ((double)value/(noOfRounds*10*11)) * 100) +"% | " );
-			System.out.println("---------------------------------------------");
-		}
-	}
-	
-	public static void playFairGameOfGamble() {
-		// Strawberry
-		int _amount = 10;
-		int _noOfRounds = 3000000;
-		int _bettedNo = 12;
-		double tableOwnersCharge = 0.30; 
-		HashMap<String, Integer> _winnersShare = playRollingDiceStrawberry(_amount, _noOfRounds, _bettedNo, tableOwnersCharge);
-		
-		int totalAmountBetted = _winnersShare.get("Total Amount Betted");
-		DecimalFormat df = new DecimalFormat("#.00");
-		
-		System.out.println("-----------------------------------------------");
-		for(String winnerName : _winnersShare.keySet()) {
-			int value = _winnersShare.get(winnerName);
-			System.out.println("| "+ winnerName + " | " + String.format("%,d", value) +" | " + df.format(((double)value/totalAmountBetted)*100) + "%");
-			System.out.println("-----------------------------------------------");
-		}
+        // strawberry
+        //playFairGameOfGamble();
 
-	}
-	
-	
-	public static void playAMultiplayerRealGameOfGamble() {
-		// Banana
-		int __noOfRounds =1000000;
-		int __minBettingAmount = 10;
-		int __maxBettingAmount = 1000;
-		int minNoOfPlayers = 1;
-		int maxNoOfPlayers = 11;
-		HashMap<String, Long> __winnersShare = playRollingDiceBanana(__noOfRounds, __minBettingAmount, __maxBettingAmount, minNoOfPlayers, maxNoOfPlayers);
-		long totalAmountBetted = __winnersShare.get("Total Amount Betted");
-		DecimalFormat df = new DecimalFormat("#.00"); 
-		
-		System.out.println("-----------------------------------------------");
-		for(String winnerName : __winnersShare.keySet()) {
-			long value = __winnersShare.get(winnerName);
-			System.out.println("| "+ winnerName + " | $" + String.format("%,d", value) +" | " + df.format(((double)value/totalAmountBetted)*100) + "%" );
-			System.out.println("-----------------------------------------------");
-		}	
-	}
-	
-	public static void generateAFairGameReturnMatrix() {
-		int noOfRounds = 500000;
-		double tableOwnersCharge = 0.20;
-		DecimalFormat df = new DecimalFormat("#");
-		HashMap<String, Double> fairGameMatrix = getFairGamePayoffMatrix( noOfRounds,  tableOwnersCharge);
+        playMultiPlayerRealGameMango();
+    }
 
-		System.out.println("----------------------");
-		for( String player : fairGameMatrix.keySet()) {
-			double returnVal = fairGameMatrix.get(player);
-			System.out.println("| "+ player + " | $" + df.format(returnVal) +" |" );
-			System.out.println("----------------------");
-		}
-	}
+    private static void playMultiPlayerRealGameMango() {
+        int noOfRoundsMin = 10;
+        int noOfRoundsMax = 1000000;
+        int noOfPlayersMin = 6;
+        int noOfPlayersMax = 20;
+        int amountBettedMin = 10;
+        int amountBettedMax = 1000;
+        int bettedNoMin = 2;
+        int bettedNoMax = 12;
+        double tableOwnersCharge = 0.00;
+        HashMap < String, Long > _winnersShare = playRollingDiceAllInputsRandomized(noOfRoundsMin, noOfRoundsMax, noOfPlayersMin, noOfPlayersMax, amountBettedMin, amountBettedMax, bettedNoMin, bettedNoMax, tableOwnersCharge);
+        DecimalFormat df = new DecimalFormat("#.00");
+        System.out.println("=============== Total Amount Won ===============");
+        System.out.println("--------------------------------------------");
+        for (String winnerName: _winnersShare.keySet()) {
+            long value = _winnersShare.get(winnerName);
+            System.out.println("| " + winnerName + " | $" + String.format("%,d", value) + " | " + df.format(((double) value / _winnersShare.get("Total Amount Won")) * 100) + "%");
+            System.out.println("--------------------------------------------");
+        }
+    }
 
-	/**
-	 * 
-	 * @return
-	 */
-	public static int rollTwoDicesAndGetWinningNo() {
-		int dice1No = getRandomNumber(1, 6);
-		int dice2No = getRandomNumber(1, 6);
-		int sum = dice1No + dice2No;
-		return sum;
-	}
-	
-	/**
-	 * 
-	 * @param noOfRounds
-	 * @return
-	 */
-	public static HashMap<String, Long> generateFrequencyDistribution(int noOfRounds) {
-		HashMap<String, Long> randomNumFreqMap = new HashMap<String, Long>();
-		int dice1No = 0;
-		int dice2No = 0;
-		for(int i= 0 ; i < noOfRounds ; i++) {
-			dice1No = getRandomNumber(1, 6);
-			dice2No = getRandomNumber(1, 6);
-			int sum = dice1No + dice2No;
-			Long frequency = randomNumFreqMap.get("Number "+sum);
-			if ( frequency != null) {
-				randomNumFreqMap.put("Number "+sum, new Long(frequency.intValue()+1));
-			} else {
-				randomNumFreqMap.put("Number "+sum, new Long(1));
-			}
-			//System.out.println(i+" >> "+getRandomNumber(2, 12) + "  vs " + sum );
-		}
-		return randomNumFreqMap;
-	}
-	
-	
-	/**
-	 * 
-	 * @param noOfRounds
-	 * @param tableOwnersCharge
-	 * @return
-	 */
-	public static HashMap<String, Double> getFairGamePayoffMatrix(int noOfRounds, double tableOwnersCharge) {
-		noOfRounds = 1000000;
-		HashMap<String, Double> payoffMatrix = new HashMap<String, Double>();
-		HashMap<String, Long> randomNumFreqMap = generateFrequencyDistribution( noOfRounds);
-		DecimalFormat df = new DecimalFormat("#.00");
-		for( String player : randomNumFreqMap.keySet()) {
-			double value = randomNumFreqMap.get(player);
-			double payOff = (noOfRounds*(1-tableOwnersCharge))/value;
-			payoffMatrix.put(player, new Double(payOff));
-		}
-		return payoffMatrix;
-	}
-	
-	
-	
-	/**
-	 * vanilla: full table, equal amount for all players, max upto 11 players, winner takes 80%
-	 * @param amount
-	 * @param tableOwnersCharge
-	 * @param noOfRounds
-	 * @param noOfPlayers
-	 * @return
-	 */
-	public static HashMap<String, Integer> playRollingDiceVanilla(int amount, double tableOwnersCharge, int noOfRounds, int noOfPlayers) {
-		HashMap<String, Integer> winnersMatrix = new HashMap<String, Integer>();
-		int dice1No = 0;
-		int dice2No = 0;
-		winnersMatrix.put("Total Amount Betted", new Integer( amount*noOfPlayers*noOfRounds ));
-		winnersMatrix.put("Spend Per Player", new Integer( amount*noOfRounds ));
-		for(int i= 0 ; i < noOfRounds ; i++) {
-			dice1No = getRandomNumber(1, 6);
-			dice2No = getRandomNumber(1, 6);
-			int sum = dice1No + dice2No;
-			Integer amountWon = winnersMatrix.get("Player "+sum);
-			if ( amountWon != null) {
-				winnersMatrix.put("Player "+sum, new Integer(amountWon.intValue() + (int)(amount*noOfPlayers*(1 - tableOwnersCharge) ) ));
-			} else {
-				winnersMatrix.put("Player "+sum, new Integer( (int)(amount*noOfPlayers* ( 1- tableOwnersCharge) )  ));
-			}
-			Integer ownersBounty = winnersMatrix.get("Table Owner");
-			if ( ownersBounty != null) {
-				winnersMatrix.put("Table Owner", new Integer(ownersBounty.intValue() + (int)(amount*noOfPlayers*tableOwnersCharge) ));
-			} else {
-				winnersMatrix.put("Table Owner", new Integer( (int)(amount*noOfPlayers*tableOwnersCharge)  ));
-			}
-		}
-		return winnersMatrix;
-	}
+    public static void generateFrequencyDistribution() {
+        int noOfRounds = 10000000;
+        HashMap < String, Long > randomNumFreqMap = generateFrequencyDistribution(noOfRounds);
+        DecimalFormat df = new DecimalFormat("#.##");
+        long totalSum = 0;
+        System.out.println("------------------------------------------");
+        for (String winnerName: randomNumFreqMap.keySet()) {
+            long value = randomNumFreqMap.get(winnerName);
+            totalSum = totalSum + value;
+            //System.out.println("| "+ winnerName + " | " + value +" |" );
+            System.out.println("| " + winnerName + " | " + String.format("%,d", value) + " | " + df.format(((double) value / noOfRounds) * 100) + "% | ");
 
-	
-	private static int getRandomNumber(int min, int max) {
-		Random rand = new Random();
-		int random = rand.nextInt((max - min) + 1) + min;
-		return random;
-	}
+            System.out.println("------------------------------------------");
+        }
 
-	
-	
-	/**
-	 * strawberry: single player, unlimited amount, winner gets return at pre-determined rate based 
-	 * on Fair Game Payoff Matrix and Table Owner takes a cut.
-	 * @param amountBetted
-	 * @param noOfRounds
-	 * @param bettedNo
-	 * @param tableOwnersCharge
-	 * @return
-	 */
-	public static HashMap<String, Integer> playRollingDiceStrawberry(int amountBetted, int noOfRounds, int bettedNo, double tableOwnersCharge) {
-		
-		HashMap<String, Double> fairGameMatrix = getFairGamePayoffMatrix( noOfRounds,  tableOwnersCharge);
-		double rateOfReturn = fairGameMatrix.get("Number "+bettedNo);
-		int _amount = (int)(amountBetted*rateOfReturn);
-		
-		HashMap<String, Integer> winnersMatrix = new HashMap<String, Integer>();
-		winnersMatrix.put("Player "+bettedNo, 0);
-		winnersMatrix.put("Table Owner", 0);
+        System.out.println("| Total Sum | " + String.format("%,d", totalSum) + " | " + df.format(((double) totalSum / noOfRounds) * 100) + "% | ");
+    }
 
-		int dice1No = 0;
-		int dice2No = 0;
+    public static void playAMultiPlayerGameOfGamble() {
+        // vanilla
+        int amount = 10;
+        double tableOwnersCharge = 0.20;
+        int noOfRounds = 2000000;
+        int noOfPlayers = 11;
 
-		String winner = "Table Owner";
+        HashMap < String, Integer > winnersShare = playRollingDiceVanilla(amount, tableOwnersCharge, noOfRounds, noOfPlayers);
+        DecimalFormat df = new DecimalFormat("#");
+        System.out.println("---------------------------------------------");
+        for (String winnerName: winnersShare.keySet()) {
+            int value = winnersShare.get(winnerName);
+            System.out.println("| " + winnerName + " | " + String.format("%,d", value) + " | " + df.format(((double) value / (noOfRounds * 10 * 11)) * 100) + "% | ");
+            System.out.println("---------------------------------------------");
+        }
+    }
 
-		winnersMatrix.put("Total Amount Betted", new Integer( amountBetted*noOfRounds ));
-		
-		for(int i= 0 ; i < noOfRounds ; i++) {
-			dice1No = getRandomNumber(1, 6);
-			dice2No = getRandomNumber(1, 6);
-			int sum = dice1No + dice2No;
-			
-			Integer amountWonSoFarByPlayer = winnersMatrix.get("Player "+bettedNo);
-			Integer amountWonSoFarByTableOwner = winnersMatrix.get("Table Owner");
-			
-			if ( sum == bettedNo) {
-				winner = "Player "+bettedNo;
-				if ( amountWonSoFarByPlayer != null) {
-					amountWonSoFarByPlayer = amountWonSoFarByPlayer + _amount;
-				} else {
-					amountWonSoFarByPlayer = _amount;
-				}
-				amountWonSoFarByTableOwner = amountWonSoFarByTableOwner - (_amount-amountBetted);
-			} else {
-				winner = "Table Owner";
-				if(amountWonSoFarByTableOwner != null) {
-					amountWonSoFarByTableOwner = amountWonSoFarByTableOwner + amountBetted;
-				} else {
-					amountWonSoFarByTableOwner = amountBetted;
-				}
-			}
-			winnersMatrix.put("Player "+bettedNo, amountWonSoFarByPlayer);
-			winnersMatrix.put("Table Owner", amountWonSoFarByTableOwner);
-		}
-		return winnersMatrix;
-	}
-	
-	/**
-	 * This is Multiplayer, multiround that allows players to make random choice of betting 
-	 * position and amount by the players. Returns on each number are fair over long term. 
-	 * Table Owner can add a % cut for himself.
-	 * 
-	 * 
-	 * @param noOfRoundsMin
-	 * @param noOfRoundsMax
-	 * @param noOfPlayersMin
-	 * @param noOfPlayersMax
-	 * @param amountBettedMin
-	 * @param amountBettedMax
-	 * @param bettedNoMin
-	 * @param bettedNoMax
-	 * @param tableOwnersCharge
-	 * @return
-	 */
-	public static HashMap<String, Long> playRollingDiceAllInputsRandomized(
-			int noOfRoundsMin, int noOfRoundsMax, 
-			int noOfPlayersMin, int noOfPlayersMax, 
-			int amountBettedMin, int amountBettedMax, 
-			int bettedNoMin, int bettedNoMax, 
-			double tableOwnersCharge) {
-		
-		HashMap<String, Double> fairGameMatrix = getFairGamePayoffMatrix( noOfRoundsMax,  tableOwnersCharge);
+    public static void playFairGameOfGamble() {
+        // Strawberry
+        int _amount = 10;
+        int _noOfRounds = 3000000;
+        int _bettedNo = 12;
+        double tableOwnersCharge = 0.30;
+        HashMap < String, Integer > _winnersShare = playRollingDiceStrawberry(_amount, _noOfRounds, _bettedNo, tableOwnersCharge);
 
-		int noOfRounds = getRandomNumber(noOfRoundsMin, noOfRoundsMax);
+        int totalAmountBetted = _winnersShare.get("Total Amount Betted");
+        DecimalFormat df = new DecimalFormat("#.00");
 
-		System.out.println("No of Rounds " + noOfRounds);
-		
-		int noOfPlayers = getRandomNumber(noOfPlayersMin, noOfPlayersMax);
-		System.out.println("No Of Players " + noOfPlayers);
-		
-		HashMap<String, Long> bettingAmountMatrix = new HashMap<String, Long>();
-		long totalAmountBetted = 0 ;
-		HashMap<String, Integer> bettingAmountMatrixInTheRound = null;
-		HashMap<String, Integer> bettingNoMatrix =  null;
-		
-		HashMap<String, Long> winnersMatrix = new HashMap<String, Long>();
-		int dice1No = 0;
-		int dice2No = 0;
-		
-		long totalAmountWon = 0 ;
-		
-		for(int i= 0 ; i < noOfRounds ; i++) {
-			//System.out.println("Running Round " + i + " of "+noOfRounds);
-			bettingNoMatrix = new HashMap<String, Integer>();
-			bettingAmountMatrixInTheRound = new HashMap<String, Integer>();
-			// placing the bets - for a player for an amount
-			for( int j = 0 ; j < noOfPlayers ; j++ ) {
-				long amountBettedSofar = bettingAmountMatrix.get("Player "+j) == null ? 0 : bettingAmountMatrix.get("Player "+j);
-				int amountBetted = getRandomNumber(amountBettedMin, amountBettedMax);
-				totalAmountBetted = totalAmountBetted + amountBetted;
-				bettingAmountMatrix.put("Player "+j, amountBettedSofar + amountBetted);
-				bettingAmountMatrixInTheRound.put("Player "+j, amountBetted);
-				
-				int bettingNo = getRandomNumber ( bettedNoMin, bettedNoMax);
-				bettingNoMatrix.put("Player "+j, bettingNo);
-			}
-			
-			// play the game
-			dice1No = getRandomNumber(1, 6);
-			dice2No = getRandomNumber(1, 6);
-			int winningNo = dice1No + dice2No;
-			
-			// reward the winner
-			
-			// find the winners
-			for(String playerName : bettingNoMatrix.keySet()) {
-				int noBettedByPlayer = bettingNoMatrix.get(playerName);
-				if ( noBettedByPlayer == winningNo) {
-					// found winning player
-					
-					// now find his bet amount
-					long bettedAmountbyWinningPlayer = bettingAmountMatrixInTheRound.get(playerName);
-					//System.out.println("Fair Game Return for :: Number "+winningNo);
-					double rateOfReturn = fairGameMatrix.get("Number "+winningNo);
-					
-					// amount won by player
-					int amountWonByWinningPlayer = (int)(bettedAmountbyWinningPlayer*rateOfReturn);
-					
-					//totalAmountWon = totalAmountWon + amountWonByWinningPlayer;
-					// amount won previously by the same player
-					long amountWonSoFarByPlayer = winnersMatrix.get(playerName) == null ? 0 : winnersMatrix.get(playerName) ;
-					
-					// new amount won by same player
-					amountWonSoFarByPlayer = amountWonSoFarByPlayer + amountWonByWinningPlayer;
-					
-					winnersMatrix.put(playerName, amountWonSoFarByPlayer);
-					
-					totalAmountWon = totalAmountWon + amountWonByWinningPlayer;
-					
-				} 
-			}
-		}
+        System.out.println("-----------------------------------------------");
+        for (String winnerName: _winnersShare.keySet()) {
+            int value = _winnersShare.get(winnerName);
+            System.out.println("| " + winnerName + " | " + String.format("%,d", value) + " | " + df.format(((double) value / totalAmountBetted) * 100) + "%");
+            System.out.println("-----------------------------------------------");
+        }
 
-		
-		bettingAmountMatrix.put("Total Amount Betted", totalAmountBetted);
-		winnersMatrix.put("Table Owner", totalAmountBetted - totalAmountWon);
-		winnersMatrix.put("Total Amount Won", totalAmountBetted);
-		DecimalFormat df = new DecimalFormat("#.00"); 
-		
-		System.out.println("===============TOTAL AMOUNT BETTED BY GAMBLERS==============");
-		System.out.println("-----------------------------------------");
-		for( String player : bettingAmountMatrix.keySet()) {
-			long bettingAmount = bettingAmountMatrix.get(player);
-			System.out.println("| "+ player + " | $" + String.format("%,d", bettingAmount) +" | " + df.format(((double)bettingAmount/totalAmountBetted)*100) + "%" );
-			System.out.println("-----------------------------------------");
-		}
+    }
 
-		return winnersMatrix;
-	}	
 
-	/**
-	 * Banana: need not be full table, winner(s) take all. Table owner doesn't have any planned cut.  
-	 * For every round generate random matrix of amount betted by playing positions. Available playing 
-	 * positions are 2 to 12. Number of players for a round is randomly generated.
-	 * Calculate total amount betted in the round
-	 * Roll the dices
-	 * Check if anyone betted on the winning position
-	 * @param noOfRounds
-	 * @param minBettingAmount
-	 * @param maxBettingAmount
-	 * @param minNoOfPlayers
-	 * @param maxNoOfPlayers
-	 * @return
-	 */
-	public static HashMap<String, Long> playRollingDiceBanana(int noOfRounds, int minBettingAmount, int maxBettingAmount, int minNoOfPlayers, int maxNoOfPlayers ) {
-		
-		int noOfPlayers = 1; 
-		long totalAmountBettedInTheRound = 0 ; 
-		long totalAmountBetted = 0 ; 
-		
-		HashMap<String, Integer> totalBettingAmountByPlayerPosition = new HashMap<String, Integer>();
-		HashMap<String, Integer> bettingAmountByPlayerPosition = null;
-		HashMap<String, Long> winnersMatrix = new HashMap<String, Long>();
-		
-		int dice1No = 0;
-		int dice2No = 0;
-		long totBettingAmnt = 0 ;
-		
-		for(int i= 0 ; i < noOfRounds ; i++) {
-			noOfPlayers = getRandomNumber(minNoOfPlayers, maxNoOfPlayers);
-			bettingAmountByPlayerPosition = getBettingAmountByPosition(noOfPlayers, minBettingAmount, maxBettingAmount);
-			//System.out.println("Round :: " + i);
-			// find total amount betted in the round/game
-			totalAmountBettedInTheRound = 0 ;
-			for(String playerName : bettingAmountByPlayerPosition.keySet()) {
-				//System.out.println(playerName+ " = " + bettingAmountByPlayerPosition.get(playerName));
-				totalAmountBettedInTheRound = totalAmountBettedInTheRound + bettingAmountByPlayerPosition.get(playerName);
-				int totalValueBettedAtPosition = totalBettingAmountByPlayerPosition.get(playerName) == null ? 0 : totalBettingAmountByPlayerPosition.get(playerName);
-				totalBettingAmountByPlayerPosition.put(playerName, totalValueBettedAtPosition + bettingAmountByPlayerPosition.get(playerName));
-			}
-			// find total amount betted so far 
-			totalAmountBetted = totalAmountBetted + totalAmountBettedInTheRound;
-			// roll the dices
-			dice1No = getRandomNumber(1, 6);
-			dice2No = getRandomNumber(1, 6);
-			// WINNING POSITION
-			int sum = dice1No + dice2No;
-			// Check if anyone betted on the winning position
-			Integer bettedAmountInWinningPosition = bettingAmountByPlayerPosition.get("Player Position "+sum);
-			if ( bettedAmountInWinningPosition != null) {
-				// goes to winning position
-				Long amountWonSoFar = winnersMatrix.get("Player Position "+sum);
-				if ( amountWonSoFar != null) {
-					winnersMatrix.put("Player Position "+sum, new Long(amountWonSoFar.longValue() + totalAmountBettedInTheRound ));
-				} else {
-					winnersMatrix.put("Player Position "+sum, totalAmountBettedInTheRound  );
-				}
-			} else {
-				// goes to table owner
-				Long ownersBounty = winnersMatrix.get("Table Owner");
-				if ( ownersBounty != null) {
-					winnersMatrix.put("Table Owner", new Long(ownersBounty.longValue() + totalAmountBettedInTheRound) );
-				} else {
-					winnersMatrix.put("Table Owner", new Long(totalAmountBettedInTheRound) );
-				}
-			}
-		}
-		
-		System.out.println("================= TOTAL AMOUNT BETTED BY EACH NUMBER ===================");
-		for(String playerName : totalBettingAmountByPlayerPosition.keySet()) {
-			totBettingAmnt = totBettingAmnt + totalBettingAmountByPlayerPosition.get(playerName);
-			System.out.println(playerName+ " | $" + String.format("%,d", totalBettingAmountByPlayerPosition.get(playerName)));
-			System.out.println("------------------------------------");
-		}
-		System.out.println("Total Betted Amount " + String.format("%,d", totBettingAmnt));
-		winnersMatrix.put("Total Amount Betted", new Long( totalAmountBetted ));
-		return winnersMatrix;
-		
-	}
-	
-	private static HashMap<String, Integer> getBettingAmountByPosition(int noOfPlayers, int minAmount, int maxAmount) {
-		HashMap<String, Integer> bettingAmountByPlayerPosition = new HashMap<String, Integer>();
-		for ( int i = 0 ; i < noOfPlayers ; i++) {
-			String playerPosition = "Player Position " + getRandomNumber(2, 12);
-			Integer amountByPositionSoFar = bettingAmountByPlayerPosition.get(playerPosition);
-			while(amountByPositionSoFar != null) {
-				playerPosition = "Player Position " + getRandomNumber(2, 12);
-				amountByPositionSoFar = bettingAmountByPlayerPosition.get(playerPosition);
-			}
-			bettingAmountByPlayerPosition.put(playerPosition, getRandomNumber(minAmount, maxAmount));
-		}
-		return bettingAmountByPlayerPosition;
-	}
+    public static void playAMultiplayerRealGameOfGamble() {
+        // Banana
+        int __noOfRounds = 1000000;
+        int __minBettingAmount = 10;
+        int __maxBettingAmount = 1000;
+        int minNoOfPlayers = 1;
+        int maxNoOfPlayers = 11;
+        HashMap < String, Long > __winnersShare = playRollingDiceBanana(__noOfRounds, __minBettingAmount, __maxBettingAmount, minNoOfPlayers, maxNoOfPlayers);
+        long totalAmountBetted = __winnersShare.get("Total Amount Betted");
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        System.out.println("-----------------------------------------------");
+        for (String winnerName: __winnersShare.keySet()) {
+            long value = __winnersShare.get(winnerName);
+            System.out.println("| " + winnerName + " | $" + String.format("%,d", value) + " | " + df.format(((double) value / totalAmountBetted) * 100) + "%");
+            System.out.println("-----------------------------------------------");
+        }
+    }
+
+    public static void generateAFairGameReturnMatrix() {
+        int noOfRounds = 500000;
+        double tableOwnersCharge = 0.20;
+        DecimalFormat df = new DecimalFormat("#");
+        HashMap < String, Double > fairGameMatrix = getFairGamePayoffMatrix(noOfRounds, tableOwnersCharge);
+
+        System.out.println("----------------------");
+        for (String player: fairGameMatrix.keySet()) {
+            double returnVal = fairGameMatrix.get(player);
+            System.out.println("| " + player + " | $" + df.format(returnVal) + " |");
+            System.out.println("----------------------");
+        }
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public static int rollTwoDicesAndGetWinningNo() {
+        int dice1No = getRandomNumber(1, 6);
+        int dice2No = getRandomNumber(1, 6);
+        int sum = dice1No + dice2No;
+        return sum;
+    }
+
+    /**
+     * 
+     * @param noOfRounds
+     * @return
+     */
+    public static HashMap < String, Long > generateFrequencyDistribution(int noOfRounds) {
+        HashMap < String, Long > randomNumFreqMap = new HashMap < String, Long > ();
+        int dice1No = 0;
+        int dice2No = 0;
+        for (int i = 0; i < noOfRounds; i++) {
+            dice1No = getRandomNumber(1, 6);
+            dice2No = getRandomNumber(1, 6);
+            int sum = dice1No + dice2No;
+            Long frequency = randomNumFreqMap.get("Number " + sum);
+            if (frequency != null) {
+                randomNumFreqMap.put("Number " + sum, new Long(frequency.intValue() + 1));
+            } else {
+                randomNumFreqMap.put("Number " + sum, new Long(1));
+            }
+            //System.out.println(i+" >> "+getRandomNumber(2, 12) + "  vs " + sum );
+        }
+        return randomNumFreqMap;
+    }
+
+
+    /**
+     * 
+     * @param noOfRounds
+     * @param tableOwnersCharge
+     * @return
+     */
+    public static HashMap < String, Double > getFairGamePayoffMatrix(int noOfRounds, double tableOwnersCharge) {
+        noOfRounds = 1000000;
+        HashMap < String, Double > payoffMatrix = new HashMap < String, Double > ();
+        HashMap < String, Long > randomNumFreqMap = generateFrequencyDistribution(noOfRounds);
+        DecimalFormat df = new DecimalFormat("#.00");
+        for (String player: randomNumFreqMap.keySet()) {
+            double value = randomNumFreqMap.get(player);
+            double payOff = (noOfRounds * (1 - tableOwnersCharge)) / value;
+            payoffMatrix.put(player, new Double(payOff));
+        }
+        return payoffMatrix;
+    }
+
+
+
+    /**
+     * vanilla: full table, equal amount for all players, max upto 11 players, winner takes 80%
+     * @param amount
+     * @param tableOwnersCharge
+     * @param noOfRounds
+     * @param noOfPlayers
+     * @return
+     */
+    public static HashMap < String, Integer > playRollingDiceVanilla(int amount, double tableOwnersCharge, int noOfRounds, int noOfPlayers) {
+        HashMap < String, Integer > winnersMatrix = new HashMap < String, Integer > ();
+        int dice1No = 0;
+        int dice2No = 0;
+        winnersMatrix.put("Total Amount Betted", new Integer(amount * noOfPlayers * noOfRounds));
+        winnersMatrix.put("Spend Per Player", new Integer(amount * noOfRounds));
+        for (int i = 0; i < noOfRounds; i++) {
+            dice1No = getRandomNumber(1, 6);
+            dice2No = getRandomNumber(1, 6);
+            int sum = dice1No + dice2No;
+            Integer amountWon = winnersMatrix.get("Player " + sum);
+            if (amountWon != null) {
+                winnersMatrix.put("Player " + sum, new Integer(amountWon.intValue() + (int)(amount * noOfPlayers * (1 - tableOwnersCharge))));
+            } else {
+                winnersMatrix.put("Player " + sum, new Integer((int)(amount * noOfPlayers * (1 - tableOwnersCharge))));
+            }
+            Integer ownersBounty = winnersMatrix.get("Table Owner");
+            if (ownersBounty != null) {
+                winnersMatrix.put("Table Owner", new Integer(ownersBounty.intValue() + (int)(amount * noOfPlayers * tableOwnersCharge)));
+            } else {
+                winnersMatrix.put("Table Owner", new Integer((int)(amount * noOfPlayers * tableOwnersCharge)));
+            }
+        }
+        return winnersMatrix;
+    }
+
+
+    private static int getRandomNumber(int min, int max) {
+        Random rand = new Random();
+        int random = rand.nextInt((max - min) + 1) + min;
+        return random;
+    }
+
+
+
+    /**
+     * strawberry: single player, unlimited amount, winner gets return at pre-determined rate based 
+     * on Fair Game Payoff Matrix and Table Owner takes a cut.
+     * @param amountBetted
+     * @param noOfRounds
+     * @param bettedNo
+     * @param tableOwnersCharge
+     * @return
+     */
+    public static HashMap < String, Integer > playRollingDiceStrawberry(int amountBetted, int noOfRounds, int bettedNo, double tableOwnersCharge) {
+
+        HashMap < String, Double > fairGameMatrix = getFairGamePayoffMatrix(noOfRounds, tableOwnersCharge);
+        double rateOfReturn = fairGameMatrix.get("Number " + bettedNo);
+        int _amount = (int)(amountBetted * rateOfReturn);
+
+        HashMap < String, Integer > winnersMatrix = new HashMap < String, Integer > ();
+        winnersMatrix.put("Player " + bettedNo, 0);
+        winnersMatrix.put("Table Owner", 0);
+
+        int dice1No = 0;
+        int dice2No = 0;
+
+        String winner = "Table Owner";
+
+        winnersMatrix.put("Total Amount Betted", new Integer(amountBetted * noOfRounds));
+
+        for (int i = 0; i < noOfRounds; i++) {
+            dice1No = getRandomNumber(1, 6);
+            dice2No = getRandomNumber(1, 6);
+            int sum = dice1No + dice2No;
+
+            Integer amountWonSoFarByPlayer = winnersMatrix.get("Player " + bettedNo);
+            Integer amountWonSoFarByTableOwner = winnersMatrix.get("Table Owner");
+
+            if (sum == bettedNo) {
+                winner = "Player " + bettedNo;
+                if (amountWonSoFarByPlayer != null) {
+                    amountWonSoFarByPlayer = amountWonSoFarByPlayer + _amount;
+                } else {
+                    amountWonSoFarByPlayer = _amount;
+                }
+                amountWonSoFarByTableOwner = amountWonSoFarByTableOwner - (_amount - amountBetted);
+            } else {
+                winner = "Table Owner";
+                if (amountWonSoFarByTableOwner != null) {
+                    amountWonSoFarByTableOwner = amountWonSoFarByTableOwner + amountBetted;
+                } else {
+                    amountWonSoFarByTableOwner = amountBetted;
+                }
+            }
+            winnersMatrix.put("Player " + bettedNo, amountWonSoFarByPlayer);
+            winnersMatrix.put("Table Owner", amountWonSoFarByTableOwner);
+        }
+        return winnersMatrix;
+    }
+
+    /**
+     * This is Multiplayer, multiround that allows players to make random choice of betting 
+     * position and amount by the players. Returns on each number are fair over long term. 
+     * Table Owner can add a % cut for himself.
+     * 
+     * 
+     * @param noOfRoundsMin
+     * @param noOfRoundsMax
+     * @param noOfPlayersMin
+     * @param noOfPlayersMax
+     * @param amountBettedMin
+     * @param amountBettedMax
+     * @param bettedNoMin
+     * @param bettedNoMax
+     * @param tableOwnersCharge
+     * @return
+     */
+    public static HashMap < String, Long > playRollingDiceAllInputsRandomized(
+        int noOfRoundsMin, int noOfRoundsMax,
+        int noOfPlayersMin, int noOfPlayersMax,
+        int amountBettedMin, int amountBettedMax,
+        int bettedNoMin, int bettedNoMax,
+        double tableOwnersCharge) {
+
+        HashMap < String, Double > fairGameMatrix = getFairGamePayoffMatrix(noOfRoundsMax, tableOwnersCharge);
+
+        int noOfRounds = getRandomNumber(noOfRoundsMin, noOfRoundsMax);
+
+        System.out.println("No of Rounds " + noOfRounds);
+
+        int noOfPlayers = getRandomNumber(noOfPlayersMin, noOfPlayersMax);
+        System.out.println("No Of Players " + noOfPlayers);
+
+        HashMap < String, Long > bettingAmountMatrix = new HashMap < String, Long > ();
+        long totalAmountBetted = 0;
+        HashMap < String, Integer > bettingAmountMatrixInTheRound = null;
+        HashMap < String, Integer > bettingNoMatrix = null;
+
+        HashMap < String, Long > winnersMatrix = new HashMap < String, Long > ();
+        int dice1No = 0;
+        int dice2No = 0;
+
+        long totalAmountWon = 0;
+
+        for (int i = 0; i < noOfRounds; i++) {
+            //System.out.println("Running Round " + i + " of "+noOfRounds);
+            bettingNoMatrix = new HashMap < String, Integer > ();
+            bettingAmountMatrixInTheRound = new HashMap < String, Integer > ();
+            // placing the bets - for a player for an amount
+            for (int j = 0; j < noOfPlayers; j++) {
+                long amountBettedSofar = bettingAmountMatrix.get("Player " + j) == null ? 0 : bettingAmountMatrix.get("Player " + j);
+                int amountBetted = getRandomNumber(amountBettedMin, amountBettedMax);
+                totalAmountBetted = totalAmountBetted + amountBetted;
+                bettingAmountMatrix.put("Player " + j, amountBettedSofar + amountBetted);
+                bettingAmountMatrixInTheRound.put("Player " + j, amountBetted);
+
+                int bettingNo = getRandomNumber(bettedNoMin, bettedNoMax);
+                bettingNoMatrix.put("Player " + j, bettingNo);
+            }
+
+            // play the game
+            dice1No = getRandomNumber(1, 6);
+            dice2No = getRandomNumber(1, 6);
+            int winningNo = dice1No + dice2No;
+
+            // reward the winner
+
+            // find the winners
+            for (String playerName: bettingNoMatrix.keySet()) {
+                int noBettedByPlayer = bettingNoMatrix.get(playerName);
+                if (noBettedByPlayer == winningNo) {
+                    // found winning player
+
+                    // now find his bet amount
+                    long bettedAmountbyWinningPlayer = bettingAmountMatrixInTheRound.get(playerName);
+                    //System.out.println("Fair Game Return for :: Number "+winningNo);
+                    double rateOfReturn = fairGameMatrix.get("Number " + winningNo);
+
+                    // amount won by player
+                    int amountWonByWinningPlayer = (int)(bettedAmountbyWinningPlayer * rateOfReturn);
+
+                    //totalAmountWon = totalAmountWon + amountWonByWinningPlayer;
+                    // amount won previously by the same player
+                    long amountWonSoFarByPlayer = winnersMatrix.get(playerName) == null ? 0 : winnersMatrix.get(playerName);
+
+                    // new amount won by same player
+                    amountWonSoFarByPlayer = amountWonSoFarByPlayer + amountWonByWinningPlayer;
+
+                    winnersMatrix.put(playerName, amountWonSoFarByPlayer);
+
+                    totalAmountWon = totalAmountWon + amountWonByWinningPlayer;
+
+                }
+            }
+        }
+
+
+        bettingAmountMatrix.put("Total Amount Betted", totalAmountBetted);
+        winnersMatrix.put("Table Owner", totalAmountBetted - totalAmountWon);
+        winnersMatrix.put("Total Amount Won", totalAmountBetted);
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        System.out.println("===============TOTAL AMOUNT BETTED BY GAMBLERS==============");
+        System.out.println("-----------------------------------------");
+        for (String player: bettingAmountMatrix.keySet()) {
+            long bettingAmount = bettingAmountMatrix.get(player);
+            System.out.println("| " + player + " | $" + String.format("%,d", bettingAmount) + " | " + df.format(((double) bettingAmount / totalAmountBetted) * 100) + "%");
+            System.out.println("-----------------------------------------");
+        }
+
+        return winnersMatrix;
+    }
+
+    /**
+     * Banana: need not be full table, winner(s) take all. Table owner doesn't have any planned cut.  
+     * For every round generate random matrix of amount betted by playing positions. Available playing 
+     * positions are 2 to 12. Number of players for a round is randomly generated.
+     * Calculate total amount betted in the round
+     * Roll the dices
+     * Check if anyone betted on the winning position
+     * @param noOfRounds
+     * @param minBettingAmount
+     * @param maxBettingAmount
+     * @param minNoOfPlayers
+     * @param maxNoOfPlayers
+     * @return
+     */
+    public static HashMap < String, Long > playRollingDiceBanana(int noOfRounds, int minBettingAmount, int maxBettingAmount, int minNoOfPlayers, int maxNoOfPlayers) {
+
+        int noOfPlayers = 1;
+        long totalAmountBettedInTheRound = 0;
+        long totalAmountBetted = 0;
+
+        HashMap < String, Integer > totalBettingAmountByPlayerPosition = new HashMap < String, Integer > ();
+        HashMap < String, Integer > bettingAmountByPlayerPosition = null;
+        HashMap < String, Long > winnersMatrix = new HashMap < String, Long > ();
+
+        int dice1No = 0;
+        int dice2No = 0;
+        long totBettingAmnt = 0;
+
+        for (int i = 0; i < noOfRounds; i++) {
+            noOfPlayers = getRandomNumber(minNoOfPlayers, maxNoOfPlayers);
+            bettingAmountByPlayerPosition = getBettingAmountByPosition(noOfPlayers, minBettingAmount, maxBettingAmount);
+            //System.out.println("Round :: " + i);
+            // find total amount betted in the round/game
+            totalAmountBettedInTheRound = 0;
+            for (String playerName: bettingAmountByPlayerPosition.keySet()) {
+                //System.out.println(playerName+ " = " + bettingAmountByPlayerPosition.get(playerName));
+                totalAmountBettedInTheRound = totalAmountBettedInTheRound + bettingAmountByPlayerPosition.get(playerName);
+                int totalValueBettedAtPosition = totalBettingAmountByPlayerPosition.get(playerName) == null ? 0 : totalBettingAmountByPlayerPosition.get(playerName);
+                totalBettingAmountByPlayerPosition.put(playerName, totalValueBettedAtPosition + bettingAmountByPlayerPosition.get(playerName));
+            }
+            // find total amount betted so far 
+            totalAmountBetted = totalAmountBetted + totalAmountBettedInTheRound;
+            // roll the dices
+            dice1No = getRandomNumber(1, 6);
+            dice2No = getRandomNumber(1, 6);
+            // WINNING POSITION
+            int sum = dice1No + dice2No;
+            // Check if anyone betted on the winning position
+            Integer bettedAmountInWinningPosition = bettingAmountByPlayerPosition.get("Player Position " + sum);
+            if (bettedAmountInWinningPosition != null) {
+                // goes to winning position
+                Long amountWonSoFar = winnersMatrix.get("Player Position " + sum);
+                if (amountWonSoFar != null) {
+                    winnersMatrix.put("Player Position " + sum, new Long(amountWonSoFar.longValue() + totalAmountBettedInTheRound));
+                } else {
+                    winnersMatrix.put("Player Position " + sum, totalAmountBettedInTheRound);
+                }
+            } else {
+                // goes to table owner
+                Long ownersBounty = winnersMatrix.get("Table Owner");
+                if (ownersBounty != null) {
+                    winnersMatrix.put("Table Owner", new Long(ownersBounty.longValue() + totalAmountBettedInTheRound));
+                } else {
+                    winnersMatrix.put("Table Owner", new Long(totalAmountBettedInTheRound));
+                }
+            }
+        }
+
+        System.out.println("================= TOTAL AMOUNT BETTED BY EACH NUMBER ===================");
+        for (String playerName: totalBettingAmountByPlayerPosition.keySet()) {
+            totBettingAmnt = totBettingAmnt + totalBettingAmountByPlayerPosition.get(playerName);
+            System.out.println(playerName + " | $" + String.format("%,d", totalBettingAmountByPlayerPosition.get(playerName)));
+            System.out.println("------------------------------------");
+        }
+        System.out.println("Total Betted Amount " + String.format("%,d", totBettingAmnt));
+        winnersMatrix.put("Total Amount Betted", new Long(totalAmountBetted));
+        return winnersMatrix;
+
+    }
+
+    private static HashMap < String, Integer > getBettingAmountByPosition(int noOfPlayers, int minAmount, int maxAmount) {
+        HashMap < String, Integer > bettingAmountByPlayerPosition = new HashMap < String, Integer > ();
+        for (int i = 0; i < noOfPlayers; i++) {
+            String playerPosition = "Player Position " + getRandomNumber(2, 12);
+            Integer amountByPositionSoFar = bettingAmountByPlayerPosition.get(playerPosition);
+            while (amountByPositionSoFar != null) {
+                playerPosition = "Player Position " + getRandomNumber(2, 12);
+                amountByPositionSoFar = bettingAmountByPlayerPosition.get(playerPosition);
+            }
+            bettingAmountByPlayerPosition.put(playerPosition, getRandomNumber(minAmount, maxAmount));
+        }
+        return bettingAmountByPlayerPosition;
+    }
 
 }
