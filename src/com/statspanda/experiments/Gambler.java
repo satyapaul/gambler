@@ -1,4 +1,4 @@
-package com.experiments;
+package com.ibm.experiments;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -277,6 +277,100 @@ Result:
 | Total Amount Betted | 30,000,000 | 100.00%
 -----------------------------------------------
 
+6. We have tried the same gamble i.e. Payoff Matrix is fair and Table Owner takes a cut
+with all factors randomized. Outcome is similar. On average all the players lose the amount 
+that Table Owner charges. However, for lesser number of rounds the results could be very 
+unpredictable. In fact, the Table Owner may not make any money or may end up earning much more
+than the planned cut. 
+
+
+No of Rounds 9973
+No Of Players 18
+
+TOTAL AMOUNT BETTED BY GAMBLERS 
+-----------------------------------------
+| Player 10 | $5,049,130 | 5.57%
+-----------------------------------------
+| Player 11 | $5,049,573 | 5.57%
+-----------------------------------------
+| Player 8 | $5,041,264 | 5.56%
+-----------------------------------------
+| Player 7 | $5,052,238 | 5.57%
+-----------------------------------------
+| Player 9 | $5,039,512 | 5.56%
+-----------------------------------------
+| Player 4 | $5,064,714 | 5.58%
+-----------------------------------------
+| Player 3 | $5,022,313 | 5.54%
+-----------------------------------------
+| Player 6 | $5,003,299 | 5.52%
+-----------------------------------------
+| Player 5 | $5,069,510 | 5.59%
+-----------------------------------------
+| Player 0 | $5,032,736 | 5.55%
+-----------------------------------------
+| Player 2 | $5,090,774 | 5.61%
+-----------------------------------------
+| Player 1 | $5,014,831 | 5.53%
+-----------------------------------------
+| Player 16 | $5,026,509 | 5.54%
+-----------------------------------------
+| Player 17 | $5,028,077 | 5.54%
+-----------------------------------------
+| Player 12 | $5,015,401 | 5.53%
+-----------------------------------------
+| Player 13 | $5,024,943 | 5.54%
+-----------------------------------------
+| Player 14 | $5,047,221 | 5.56%
+-----------------------------------------
+| Player 15 | $5,024,303 | 5.54%
+-----------------------------------------
+| Total Amount Betted | $90,696,348 | 100.00%
+-----------------------------------------
+
+Total Amount Won
+--------------------------------------------
+| Player 10 | $4,211,682 | 4.64%
+--------------------------------------------
+| Player 11 | $4,117,135 | 4.54%
+--------------------------------------------
+| Player 8 | $3,931,574 | 4.33%
+--------------------------------------------
+| Player 7 | $4,170,266 | 4.60%
+--------------------------------------------
+| Player 9 | $4,144,855 | 4.57%
+--------------------------------------------
+| Player 4 | $4,310,571 | 4.75%
+--------------------------------------------
+| Player 3 | $4,013,216 | 4.42%
+--------------------------------------------
+| Player 6 | $3,910,301 | 4.31%
+--------------------------------------------
+| Player 5 | $4,083,093 | 4.50%
+--------------------------------------------
+| Player 0 | $4,090,285 | 4.51%
+--------------------------------------------
+| Player 2 | $4,209,126 | 4.64%
+--------------------------------------------
+| Player 1 | $3,955,758 | 4.36%
+--------------------------------------------
+| Player 16 | $4,161,625 | 4.59%
+--------------------------------------------
+| Player 17 | $3,849,358 | 4.24%
+--------------------------------------------
+| Player 12 | $3,904,212 | 4.30%
+--------------------------------------------
+| Player 13 | $4,074,304 | 4.49%
+--------------------------------------------
+| Player 14 | $4,022,716 | 4.44%
+--------------------------------------------
+| Player 15 | $3,983,948 | 4.39%
+--------------------------------------------
+| Table Owner | $17,552,323 | 19.35%
+--------------------------------------------
+| Total Amount Won | $90,696,348 | 100.00%
+--------------------------------------------
+
 
  * 
  * @author satyajitpaul
@@ -287,7 +381,7 @@ public class Gambler {
 	public static void main(String[] args) {
 		
 
-		generateFrequencyDistribution();
+		//generateFrequencyDistribution();
 
 		// vanilla
 		//playAMultiPlayerGameOfGamble();
@@ -301,9 +395,30 @@ public class Gambler {
 		// strawberry
 		//playFairGameOfGamble();
 		
-
+		playMultiPlayerRealGameMango();
 	}
 	
+	private static void playMultiPlayerRealGameMango() {
+		int noOfRoundsMin = 10;
+		int noOfRoundsMax = 1000000;
+		int noOfPlayersMin = 6;
+		int noOfPlayersMax = 20;
+		int amountBettedMin = 10;
+		int amountBettedMax = 1000;
+		int bettedNoMin = 2;
+		int bettedNoMax = 12;
+		double tableOwnersCharge = 0.00;
+		HashMap<String, Long> _winnersShare = playRollingDiceAllInputsRandomized(noOfRoundsMin, noOfRoundsMax, noOfPlayersMin, noOfPlayersMax, amountBettedMin, amountBettedMax, bettedNoMin, bettedNoMax, tableOwnersCharge);
+		DecimalFormat df = new DecimalFormat("#.00"); 
+		System.out.println("=============== Total Amount Won ===============");
+		System.out.println("--------------------------------------------");
+		for(String winnerName : _winnersShare.keySet()) {
+			long value = _winnersShare.get(winnerName);
+			System.out.println("| "+ winnerName + " | $" + String.format("%,d", value) +" | " + df.format(((double)value/_winnersShare.get("Total Amount Won"))*100) + "%"  );
+			System.out.println("--------------------------------------------");
+		}			
+	}
+
 	public static void generateFrequencyDistribution() {
 		int noOfRounds = 10000000;
 		HashMap<String, Long> randomNumFreqMap = generateFrequencyDistribution(noOfRounds);
@@ -369,7 +484,7 @@ public class Gambler {
 		int maxNoOfPlayers = 11;
 		HashMap<String, Long> __winnersShare = playRollingDiceBanana(__noOfRounds, __minBettingAmount, __maxBettingAmount, minNoOfPlayers, maxNoOfPlayers);
 		long totalAmountBetted = __winnersShare.get("Total Amount Betted");
-		DecimalFormat df = new DecimalFormat("#.00");
+		DecimalFormat df = new DecimalFormat("#.00"); 
 		
 		System.out.println("-----------------------------------------------");
 		for(String winnerName : __winnersShare.keySet()) {
@@ -390,7 +505,6 @@ public class Gambler {
 			double returnVal = fairGameMatrix.get(player);
 			System.out.println("| "+ player + " | $" + df.format(returnVal) +" |" );
 			System.out.println("----------------------");
-			
 		}
 	}
 
@@ -437,6 +551,7 @@ public class Gambler {
 	 * @return
 	 */
 	public static HashMap<String, Double> getFairGamePayoffMatrix(int noOfRounds, double tableOwnersCharge) {
+		noOfRounds = 1000000;
 		HashMap<String, Double> payoffMatrix = new HashMap<String, Double>();
 		HashMap<String, Long> randomNumFreqMap = generateFrequencyDistribution( noOfRounds);
 		DecimalFormat df = new DecimalFormat("#.00");
@@ -549,7 +664,118 @@ public class Gambler {
 		return winnersMatrix;
 	}
 	
-	
+	/**
+	 * This is Multiplayer, multiround that allows players to make random choice of betting 
+	 * position and amount by the players. Returns on each number are fair over long term. 
+	 * Table Owner can add a % cut for himself.
+	 * 
+	 * 
+	 * @param noOfRoundsMin
+	 * @param noOfRoundsMax
+	 * @param noOfPlayersMin
+	 * @param noOfPlayersMax
+	 * @param amountBettedMin
+	 * @param amountBettedMax
+	 * @param bettedNoMin
+	 * @param bettedNoMax
+	 * @param tableOwnersCharge
+	 * @return
+	 */
+	public static HashMap<String, Long> playRollingDiceAllInputsRandomized(
+			int noOfRoundsMin, int noOfRoundsMax, 
+			int noOfPlayersMin, int noOfPlayersMax, 
+			int amountBettedMin, int amountBettedMax, 
+			int bettedNoMin, int bettedNoMax, 
+			double tableOwnersCharge) {
+		
+		HashMap<String, Double> fairGameMatrix = getFairGamePayoffMatrix( noOfRoundsMax,  tableOwnersCharge);
+
+		int noOfRounds = getRandomNumber(noOfRoundsMin, noOfRoundsMax);
+
+		System.out.println("No of Rounds " + noOfRounds);
+		
+		int noOfPlayers = getRandomNumber(noOfPlayersMin, noOfPlayersMax);
+		System.out.println("No Of Players " + noOfPlayers);
+		
+		HashMap<String, Long> bettingAmountMatrix = new HashMap<String, Long>();
+		long totalAmountBetted = 0 ;
+		HashMap<String, Integer> bettingAmountMatrixInTheRound = null;
+		HashMap<String, Integer> bettingNoMatrix =  null;
+		
+		HashMap<String, Long> winnersMatrix = new HashMap<String, Long>();
+		int dice1No = 0;
+		int dice2No = 0;
+		
+		long totalAmountWon = 0 ;
+		
+		for(int i= 0 ; i < noOfRounds ; i++) {
+			//System.out.println("Running Round " + i + " of "+noOfRounds);
+			bettingNoMatrix = new HashMap<String, Integer>();
+			bettingAmountMatrixInTheRound = new HashMap<String, Integer>();
+			// placing the bets - for a player for an amount
+			for( int j = 0 ; j < noOfPlayers ; j++ ) {
+				long amountBettedSofar = bettingAmountMatrix.get("Player "+j) == null ? 0 : bettingAmountMatrix.get("Player "+j);
+				int amountBetted = getRandomNumber(amountBettedMin, amountBettedMax);
+				totalAmountBetted = totalAmountBetted + amountBetted;
+				bettingAmountMatrix.put("Player "+j, amountBettedSofar + amountBetted);
+				bettingAmountMatrixInTheRound.put("Player "+j, amountBetted);
+				
+				int bettingNo = getRandomNumber ( bettedNoMin, bettedNoMax);
+				bettingNoMatrix.put("Player "+j, bettingNo);
+			}
+			
+			// play the game
+			dice1No = getRandomNumber(1, 6);
+			dice2No = getRandomNumber(1, 6);
+			int winningNo = dice1No + dice2No;
+			
+			// reward the winner
+			
+			// find the winners
+			for(String playerName : bettingNoMatrix.keySet()) {
+				int noBettedByPlayer = bettingNoMatrix.get(playerName);
+				if ( noBettedByPlayer == winningNo) {
+					// found winning player
+					
+					// now find his bet amount
+					long bettedAmountbyWinningPlayer = bettingAmountMatrixInTheRound.get(playerName);
+					//System.out.println("Fair Game Return for :: Number "+winningNo);
+					double rateOfReturn = fairGameMatrix.get("Number "+winningNo);
+					
+					// amount won by player
+					int amountWonByWinningPlayer = (int)(bettedAmountbyWinningPlayer*rateOfReturn);
+					
+					//totalAmountWon = totalAmountWon + amountWonByWinningPlayer;
+					// amount won previously by the same player
+					long amountWonSoFarByPlayer = winnersMatrix.get(playerName) == null ? 0 : winnersMatrix.get(playerName) ;
+					
+					// new amount won by same player
+					amountWonSoFarByPlayer = amountWonSoFarByPlayer + amountWonByWinningPlayer;
+					
+					winnersMatrix.put(playerName, amountWonSoFarByPlayer);
+					
+					totalAmountWon = totalAmountWon + amountWonByWinningPlayer;
+					
+				} 
+			}
+		}
+
+		
+		bettingAmountMatrix.put("Total Amount Betted", totalAmountBetted);
+		winnersMatrix.put("Table Owner", totalAmountBetted - totalAmountWon);
+		winnersMatrix.put("Total Amount Won", totalAmountBetted);
+		DecimalFormat df = new DecimalFormat("#.00"); 
+		
+		System.out.println("===============TOTAL AMOUNT BETTED BY GAMBLERS==============");
+		System.out.println("-----------------------------------------");
+		for( String player : bettingAmountMatrix.keySet()) {
+			long bettingAmount = bettingAmountMatrix.get(player);
+			System.out.println("| "+ player + " | $" + String.format("%,d", bettingAmount) +" | " + df.format(((double)bettingAmount/totalAmountBetted)*100) + "%" );
+			System.out.println("-----------------------------------------");
+		}
+
+		return winnersMatrix;
+	}	
 
 	/**
 	 * Banana: need not be full table, winner(s) take all. Table owner doesn't have any planned cut.  
