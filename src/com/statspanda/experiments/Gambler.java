@@ -1,4 +1,4 @@
-package com.statspanda.experiments;
+package com.experiments;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
